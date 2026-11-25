@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kitanda Market — Protótipo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --preto:#0A0A0A;--grafite:#141414;--grafite2:#1A1A1A;--linha:#262626;--linha2:#3A3A3A;
+  --vermelho:#CC092F;--amarelo:#FFCB00;--branco:#F5F5F0;--cinza:#8A8A8A;--cinza-claro:#BDBDB5;
+  --display:'Bebas Neue',Impact,sans-serif;--texto:Inter,system-ui,sans-serif;
+  --wrap:1320px;--pad:clamp(16px,3vw,40px);--raio:3px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--preto);color:var(--branco);font-family:var(--texto);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+a:hover{color:var(--amarelo)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--amarelo);outline-offset:2px}
+.bb{font-family:var(--display);font-weight:400;letter-spacing:.01em;line-height:.92}
+.ey{font-size:12px;font-weight:700;letter-spacing:.2em;color:var(--amarelo);text-transform:uppercase}
+.wrap{max-width:var(--wrap);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad);width:100%}
+.muted{color:var(--cinza-claro)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.ph{color:var(--cinza)}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:52px;padding:0 28px;border-radius:var(--raio);font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;border:0;transition:transform .15s,background .15s}
+.btn:hover{color:var(--branco);transform:translateY(-1px)}
+.btn-r{background:var(--vermelho);color:var(--branco)}
+.btn-r:hover{background:#E00B35}
+.btn-o{border:1px solid var(--branco);background:none;color:var(--branco)}
+.btn-o:hover{background:var(--branco);color:var(--preto)}
+.btn-y{background:var(--amarelo);color:var(--preto)}
+.btn-y:hover{color:var(--preto)}
+.btn-k{background:var(--preto);color:var(--branco)}
+.btn-line{border:1px solid var(--linha2);background:none;color:var(--branco);font-weight:600;letter-spacing:.02em;text-transform:none;min-height:46px;font-size:13px}
+.btn-line:hover{border-color:var(--amarelo);color:var(--amarelo)}
+.btn-full{width:100%}
+.ib{width:44px;height:44px;background:none;border:0;color:var(--branco);display:inline-flex;align-items:center;justify-content:center;padding:0;position:relative}
+.ib:hover{color:var(--amarelo)}
+.badge{position:absolute;left:10px;top:10px;font-size:11px;font-weight:700;letter-spacing:.08em;padding:5px 9px;z-index:1}
+.b-y{background:var(--amarelo);color:var(--preto)}
+.b-r{background:var(--vermelho);color:var(--branco)}
+.count{position:absolute;top:4px;right:2px;min-width:18px;height:18px;border-radius:9px;background:var(--amarelo);color:var(--preto);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.count[hidden]{display:none}
+
+/* faixa do padrão */
+.faixa{height:32px;background-color:var(--preto);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='32'%3E%3Crect width='64' height='3' fill='%23CC092F'/%3E%3Crect y='29' width='64' height='3' fill='%23CC092F'/%3E%3Ccircle cx='13' cy='16' r='7' fill='none' stroke='%23FFCB00' stroke-width='3.5'/%3E%3Cpath d='M27 16l4.5-5.5 4.5 5.5-4.5 5.5z M37 16l4.5-5.5 4.5 5.5-4.5 5.5z' fill='%23F5F5F0'/%3E%3Cpath d='M49 8h11l-5.5 8 5.5 8h-11l5.5-8z' fill='%23CC092F'/%3E%3C/svg%3E");background-repeat:repeat-x}
+
+/* protótipo */
+.proto{position:fixed;left:12px;bottom:12px;z-index:60;background:var(--amarelo);color:var(--preto);font-size:12px;font-weight:700;padding:8px 12px;border-radius:99px;display:flex;gap:8px;align-items:center;box-shadow:0 4px 14px rgba(0,0,0,.5)}
+.proto button{background:none;border:0;font-weight:700;font-size:14px;line-height:1;padding:0 2px;color:var(--preto)}
+
+/* anúncio + cabeçalho */
+.anuncio{background:var(--vermelho);display:flex;justify-content:center;flex-wrap:wrap;gap:6px 32px;padding:10px 16px;font-size:12px;font-weight:700;letter-spacing:.08em;text-align:center}
+.anuncio i{font-style:normal;color:var(--amarelo)}
+.anuncio .extra{display:contents}
+header.topo{position:sticky;top:0;z-index:40;background:var(--preto);border-bottom:1px solid #1F1F1F}
+.topo .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:76px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo img{width:46px;height:46px;border-radius:4px}
+.logo span{font-family:var(--display);font-size:28px;letter-spacing:.04em}
+.nav{display:flex;gap:34px;font-size:14px;font-weight:600;letter-spacing:.06em}
+.nav a.ativo{color:var(--amarelo)}
+.loja-dd{position:relative}
+.loja-dd .dd{display:none;position:absolute;top:100%;left:-16px;padding-top:18px}
+.loja-dd:hover .dd,.loja-dd:focus-within .dd{display:block}
+.dd-in{background:var(--grafite);border-top:3px solid var(--vermelho);padding:10px 0;min-width:230px;display:flex;flex-direction:column}
+.dd-in a{padding:10px 18px;font-weight:500;letter-spacing:0;font-size:14px}
+.acoes{display:flex}
+.so-mob{display:none}
+@media (max-width:900px){
+  .nav,.so-desk{display:none!important}
+  .so-mob{display:inline-flex}
+  .topo .wrap{min-height:60px;padding-left:8px;padding-right:8px}
+  .logo span{display:none}
+  .logo img{width:40px;height:40px}
+  .anuncio .extra{display:none}
+}
+
+/* menu mobile */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:70;opacity:0;pointer-events:none;transition:opacity .2s}
+.overlay.on{opacity:1;pointer-events:auto}
+.menu-mob{position:fixed;inset:0;z-index:80;background:var(--preto);display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .25s}
+.menu-mob.on{transform:none}
+.menu-mob .cab{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-bottom:1px solid #1F1F1F}
+.menu-mob nav{padding:8px 16px;display:flex;flex-direction:column;overflow:auto}
+.mi{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #1F1F1F;font-family:var(--display);font-size:40px;line-height:1}
+.menu-mob details summary{list-style:none;cursor:pointer}
+.menu-mob details summary::-webkit-details-marker{display:none}
+.menu-mob details summary::after{content:"+";font-family:var(--texto);font-size:22px;color:var(--amarelo)}
+.menu-mob details[open] summary::after{content:"−"}
+.menu-mob details[open] summary{color:var(--amarelo);border-bottom:0}
+.subs{display:flex;flex-direction:column;padding:0 0 12px 14px;border-left:2px solid var(--vermelho);border-bottom:1px solid #1F1F1F}
+.subs a{padding:10px 0;color:var(--cinza-claro);font-weight:500}
+.menu-mob .pe{margin-top:auto;padding:20px 16px 28px;background:var(--grafite);display:flex;flex-direction:column;gap:14px;font-weight:600}
+.bandeira{height:10px;background:linear-gradient(90deg,var(--vermelho) 0 33.3%,var(--preto) 33.3% 66.6%,var(--amarelo) 66.6%)}
+
+/* gaveta do carrinho */
+.gaveta{position:fixed;top:0;right:0;bottom:0;width:min(420px,92vw);z-index:80;background:var(--preto);border-left:1px solid var(--linha);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s;box-shadow:-12px 0 30px rgba(0,0,0,.6)}
+.gaveta.on{transform:none}
+.gaveta .cab{display:flex;justify-content:space-between;align-items:center;padding:14px 8px 14px 20px;border-bottom:1px solid #1F1F1F}
+.gaveta .corpo{flex:1;overflow:auto;padding:0 20px}
+.gaveta .pe{padding:16px 20px 22px;border-top:1px solid #1F1F1F;display:flex;flex-direction:column;gap:10px}
+.portes{padding:14px 20px;background:var(--grafite);display:flex;flex-direction:column;gap:8px;font-size:13px}
+.barra{height:6px;background:var(--linha);border-radius:3px;overflow:hidden}
+.barra div{height:6px;background:var(--amarelo);transition:width .3s}
+.linha-c{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid #1F1F1F}
+.linha-c img{width:80px;height:100px;object-fit:cover;object-position:center 20%;border-radius:2px}
+.linha-c .info{flex:1;display:flex;flex-direction:column;gap:4px;min-width:0}
+.qtd{display:inline-flex;align-items:center;border:1px solid var(--linha2);border-radius:var(--raio)}
+.qtd button{width:38px;height:38px;background:none;border:0;color:var(--branco);font-size:18px}
+.qtd span{width:24px;text-align:center;font-size:14px}
+.vazio{padding:48px 0;text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center}
+.pagamentos{display:flex;gap:6px;flex-wrap:wrap}
+.pagamentos span{border:1px solid #333;padding:5px 8px;font-size:10px;font-weight:600}
+
+/* modal / painel */
+.painel{position:fixed;z-index:90;background:var(--preto);display:flex;flex-direction:column;left:50%;top:50%;transform:translate(-50%,-46%);width:min(640px,94vw);max-height:90vh;border-top:3px solid var(--amarelo);border-radius:6px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;box-shadow:0 20px 50px rgba(0,0,0,.7)}
+.painel.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.painel .cab{display:flex;justify-content:space-between;align-items:center;padding:12px 8px 8px 22px}
+.painel .corpo{padding:0 22px 22px;overflow:auto;display:flex;flex-direction:column;gap:16px}
+@media (max-width:640px){
+  .painel{left:0;right:0;top:auto;bottom:0;width:100%;transform:translateY(100%);border-radius:14px 14px 0 0;max-height:86vh}
+  .painel.on{transform:none}
+  .painel::before{content:"";width:44px;height:5px;border-radius:3px;background:var(--linha2);align-self:center;margin-top:10px}
+}
+table.t{width:100%;border-collapse:collapse}
+.t th,.t td{padding:14px 12px;text-align:left;border-bottom:1px solid var(--linha);font-size:15px}
+.t th{font-size:11px;letter-spacing:.14em;color:var(--cinza);font-weight:700;background:var(--grafite)}
+.t-box{overflow-x:auto;border:1px solid var(--linha);border-radius:4px}
+.nota{padding:16px 18px;background:var(--grafite);border-left:3px solid var(--vermelho);font-size:14px;line-height:1.6;color:var(--cinza-claro)}
+.nota strong{color:var(--branco)}
+
+/* views */
+.view{display:none}
+.view.on{display:block}
+.sec{padding-top:clamp(56px,7vw,96px);padding-bottom:clamp(56px,7vw,96px)}
+.cinza{background:var(--grafite)}
+h1,h2,h3{margin:0}
+.t-sec{font-size:clamp(36px,4.5vw,60px)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;min-height:640px;display:flex}
+.hero .diag{position:absolute;top:0;bottom:0;right:0;width:52%;background:var(--vermelho);clip-path:polygon(24% 0,100% 0,100% 100%,0 100%)}
+.hero .diag2{position:absolute;top:0;bottom:0;right:0;width:52%;background:var(--amarelo);clip-path:polygon(21% 0,23% 0,-1% 100%,-3% 100%)}
+.hero .wrap{position:relative;display:flex;align-items:center;gap:2rem}
+.hero .txt{flex:1 1 50%;display:flex;flex-direction:column;gap:24px;padding:64px 0}
+.hero h1{font-size:clamp(64px,10vw,148px);line-height:.86}
+.hero .img{flex:1 1 45%;display:flex;justify-content:center;align-self:stretch}
+.hero .img img{width:100%;max-width:460px;height:640px;object-fit:cover;object-position:center 16%}
+@media (max-width:900px){
+  .hero{min-height:0}
+  .hero .diag,.hero .diag2{width:100%;bottom:170px}
+  .hero .diag{clip-path:polygon(38% 0,100% 0,100% 100%,0 100%)}
+  .hero .diag2{clip-path:polygon(34% 0,37% 0,-1% 100%,-4% 100%)}
+  .hero .wrap{flex-direction:column-reverse;gap:0;padding-left:0;padding-right:0}
+  .hero .img img{height:440px;max-width:320px}
+  .hero .txt{padding:20px var(--pad) 28px;gap:14px;width:100%}
+  .hero .txt p{display:none}
+  .hero .txt .btns .btn-o{display:none}
+  .hero .txt .btns .btn{width:100%}
+}
+.confianca{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;padding-top:26px;padding-bottom:26px;font-size:14px;font-weight:600}
+.confianca div{display:flex;gap:14px;align-items:center}
+@media (max-width:640px){.confianca{grid-template-columns:1fr 1fr;gap:14px 10px;font-size:12px}.confianca svg{width:22px;height:22px}}
+
+/* coleções */
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.col-card{position:relative;display:block;overflow:hidden;border-radius:4px}
+.col-card img{width:100%;height:520px;object-fit:cover;object-position:center 22%;transition:transform .4s}
+.col-card:hover img{transform:scale(1.04)}
+.col-card .rot{position:absolute;left:0;right:0;bottom:0;padding:16px 22px;background:var(--preto);border-top:4px solid var(--vermelho);display:flex;justify-content:space-between;align-items:center}
+.col-card:hover{color:var(--branco)}
+@media (max-width:900px){
+  .cols{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;margin-right:calc(var(--pad)*-1);padding-right:var(--pad)}
+  .col-card{flex:0 0 72%;scroll-snap-align:start}
+  .col-card img{height:340px}
+}
+
+/* cartões de produto */
+.grelha{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:32px 20px}
+@media (max-width:1100px){.grelha{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.grelha{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 10px}}
+.card{display:flex;flex-direction:column;gap:8px}
+.card .foto{position:relative;overflow:hidden;border-radius:var(--raio);background:var(--grafite2)}
+.card .foto img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center 20%;transition:transform .4s}
+.card:hover .foto img{transform:scale(1.04)}
+.card h3{font-size:15px;font-weight:600}
+.preco{font-family:var(--display);font-size:26px;line-height:1}
+.preco s{color:var(--cinza);font-size:.78em;margin-left:6px}
+.preco .promo{color:var(--amarelo)}
+@media (max-width:760px){.card h3{font-size:13px}.preco{font-size:22px}}
+
+/* história 50/50 */
+.split{display:flex;flex-wrap:wrap;min-height:520px}
+.split>img{flex:1 1 420px;min-width:0;height:560px;object-fit:cover;object-position:center 52%}
+.split .txt{flex:1 1 420px;display:flex;flex-direction:column;justify-content:center;gap:20px;padding:64px clamp(20px,6vw,96px)}
+@media (max-width:640px){.split>img{height:300px}.split .txt{padding:28px var(--pad) 40px}}
+
+/* banda vermelha */
+.banda{background:var(--vermelho)}
+.banda .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:28px}
+.campo{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600}
+.in{min-height:52px;background:var(--grafite);border:1px solid #2E2E2E;color:var(--branco);border-radius:var(--raio);padding:0 14px;font:15px var(--texto);width:100%}
+.in:focus{border-color:var(--amarelo);outline:none}
+textarea.in{padding:14px;min-height:170px;resize:vertical}
+.in-claro{background:#fff;color:var(--preto);border:0}
+
+/* instagram */
+.insta{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.insta img{width:100%;aspect-ratio:1;object-fit:cover;object-position:center 25%}
+@media (max-width:760px){.insta{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}}
+
+/* rodapé */
+footer.rodape{background:#050505;border-top:1px solid #1F1F1F;position:relative;overflow:hidden}
+footer .marca{position:absolute;right:-40px;bottom:-150px;font-family:var(--display);font-size:520px;line-height:1;color:#121212;pointer-events:none}
+footer .cols-r{display:flex;flex-wrap:wrap;gap:48px}
+footer nav{flex:1 1 160px;display:flex;flex-direction:column;gap:12px;font-size:14px}
+footer nav .tit{font-weight:700;letter-spacing:.12em;color:var(--cinza);font-size:12px}
+footer details{flex:1 1 100%;border-bottom:1px solid var(--linha)}
+footer details summary{list-style:none;display:flex;justify-content:space-between;padding:15px 0;font-weight:600;cursor:pointer}
+footer details summary::-webkit-details-marker{display:none}
+footer details summary::after{content:"+";color:var(--amarelo)}
+footer details[open] summary::after{content:"−"}
+footer details div{display:flex;flex-direction:column;gap:12px;padding-bottom:16px;font-size:14px;color:var(--cinza-claro)}
+.f-desk{display:contents}.f-mob{display:none}
+@media (max-width:760px){.f-desk{display:none}.f-mob{display:block;width:100%}}
+.livro{border:1px solid #555;padding:9px 12px;font-weight:600;font-size:12px}
+
+/* whatsapp */
+.wa{position:fixed;right:16px;bottom:16px;z-index:50;width:58px;height:58px;border-radius:50%;background:var(--amarelo);color:var(--preto);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.5)}
+.wa:hover{color:var(--preto);transform:scale(1.05)}
+
+/* página de produto */
+.migalhas{font-size:13px;color:var(--cinza);padding-top:24px;padding-bottom:24px}
+.migalhas a{color:var(--cinza)}
+.pdp{display:flex;flex-wrap:wrap;gap:48px;padding-bottom:80px;align-items:flex-start}
+.galeria{flex:3 1 480px;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.galeria .g{position:relative;overflow:hidden;border-radius:var(--raio);background:var(--grafite)}
+.galeria .g img{width:100%;height:100%;object-fit:cover}
+.galeria .g1{grid-column:1/-1;height:760px}
+.galeria .g2,.galeria .g3,.galeria .g4,.galeria .g5{height:380px}
+.galeria .vazio-f{display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--cinza);height:100%}
+.thumbs{display:none}
+.info{flex:2 1 380px;min-width:0;position:sticky;top:100px;display:flex;flex-direction:column;gap:16px}
+.info h1{font-size:clamp(40px,4.4vw,64px)}
+.versoes{display:flex;gap:10px}
+.versoes button{padding:0;border:0;background:none;border-radius:2px;outline:1px solid transparent}
+.versoes img{width:68px;height:86px;object-fit:cover;object-position:center 22%;border-radius:2px}
+.versoes button.sel{outline:2px solid var(--amarelo)}
+.tams{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.tams button{min-height:52px;border:1px solid var(--linha2);background:none;color:var(--branco);border-radius:var(--raio);font-weight:600;font-size:15px}
+.tams button:hover{border-color:var(--branco)}
+.tams button.sel{border:2px solid var(--amarelo);color:var(--amarelo);background:var(--grafite2);font-weight:700}
+.tams button:disabled{border-style:dashed;color:#5A5A5A;text-decoration:line-through;cursor:not-allowed}
+.garantias{display:flex;flex-direction:column;gap:14px;padding:18px 20px;background:var(--grafite);border-radius:4px;font-size:14px}
+.garantias div{display:flex;gap:12px;align-items:center}
+.acc details{border-bottom:1px solid var(--linha)}
+.acc summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 0;font-size:16px;font-weight:600}
+.acc summary::-webkit-details-marker{display:none}
+.acc summary::after{content:"+";color:var(--amarelo);font-size:22px;font-weight:500}
+.acc details[open] summary::after{content:"−"}
+.acc details p{margin:0 0 20px;font-size:15px;line-height:1.7;color:var(--cinza-claro)}
+.fixa{display:none}
+@media (max-width:900px){
+  .pdp{gap:0}
+  .galeria{display:block;margin-left:calc(var(--pad)*-1);margin-right:calc(var(--pad)*-1)}
+  .galeria .g:not(.g1){display:none}
+  .galeria .g1{height:auto}
+  .galeria .g1 img{aspect-ratio:4/5;height:auto}
+  .thumbs{display:flex;gap:6px;padding:10px 0 4px;overflow-x:auto}
+  .thumbs button{flex:0 0 auto;padding:0;border:0;background:var(--grafite);width:56px;height:70px;border-radius:2px;outline:1px solid transparent;overflow:hidden;color:var(--cinza);font-size:10px}
+  .thumbs button.sel{outline:2px solid var(--amarelo)}
+  .thumbs img{width:100%;height:100%;object-fit:cover}
+  .info{position:static;padding-top:20px}
+  .fixa{position:fixed;left:0;right:0;bottom:0;z-index:45;background:var(--preto);border-top:1px solid var(--linha);box-shadow:0 -8px 20px rgba(0,0,0,.6);padding:10px 12px 14px;display:flex;gap:12px;align-items:center;transform:translateY(110%);transition:transform .25s}
+  .fixa.on{transform:none}
+  .fixa img{width:40px;height:50px;object-fit:cover;object-position:center 22%}
+  body.pdp-on .wa{bottom:92px}
+}
+.porque{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px}
+.porque div{display:flex;gap:16px;align-items:flex-start}
+
+/* cabeçalhos de página interna */
+.cab-pag{background:var(--grafite);position:relative;overflow:hidden}
+.cab-pag .diag{position:absolute;top:0;bottom:0;right:0;width:30%;background:var(--vermelho);clip-path:polygon(34% 0,100% 0,100% 100%,0 100%)}
+.cab-pag .wrap{position:relative;padding-top:clamp(36px,5vw,64px);padding-bottom:clamp(32px,4.5vw,56px);display:flex;flex-direction:column;gap:14px}
+.cab-pag h1{font-size:clamp(52px,8vw,112px);line-height:.88;max-width:900px}
+@media (max-width:640px){.cab-pag .diag{width:34%}}
+
+/* coleção */
+.barra-f{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px;padding-top:24px;padding-bottom:24px;border-bottom:1px solid #1F1F1F}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{min-height:44px;padding:0 18px;border:1px solid var(--linha2);background:none;color:var(--branco);border-radius:99px;font-weight:600;font-size:13px}
+.chip.sel{background:var(--branco);color:var(--preto);border-color:var(--branco)}
+@media (max-width:640px){.chips{flex-wrap:nowrap;overflow-x:auto;width:100%;margin-right:calc(var(--pad)*-1)}.chip{flex:0 0 auto;min-height:40px}}
+select.in{width:auto}
+
+/* menu lateral + documentos */
+.lado{display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start}
+.lado>nav{flex:0 1 240px;display:flex;flex-direction:column;gap:4px;position:sticky;top:100px;font-size:15px;font-weight:600}
+.lado>nav a{padding:12px 16px;border-left:3px solid transparent}
+.lado>nav a.sel{border-left-color:var(--amarelo);background:var(--grafite)}
+.lado>.conteudo{flex:1 1 560px;min-width:0}
+@media (max-width:760px){.lado{gap:28px}.lado>nav{position:static;flex-direction:row;overflow-x:auto;width:100%;flex-basis:100%}.lado>nav a{white-space:nowrap;border-left:0;border-bottom:3px solid transparent}.lado>nav a.sel{border-bottom-color:var(--amarelo)}}
+.doc{max-width:760px}
+.doc h2{margin:40px 0 12px;font-family:var(--display);font-weight:400;font-size:40px}
+.doc p{margin:0 0 14px;font-size:16px;line-height:1.75;color:var(--cinza-claro)}
+.faq h2{font-family:var(--display);font-weight:400;font-size:40px;margin:0 0 6px}
+.faq .grupo{display:flex;flex-direction:column;margin-bottom:48px}
+
+/* cores sobre */
+.cores{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+.cores .sw{height:180px}
+.cores .tx{padding:22px;background:var(--preto);display:flex;flex-direction:column;gap:8px}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140%);z-index:95;background:var(--branco);color:var(--preto);padding:14px 18px;border-radius:4px;font-size:14px;font-weight:600;display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:transform .25s,opacity .25s,visibility .25s;max-width:92vw;opacity:0;visibility:hidden}
+.toast.on{transform:translate(-50%,0);opacity:1;visibility:visible}
+.toast::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--vermelho);flex:0 0 auto}
+
+/* 404 */
+.e404{position:relative;overflow:hidden;min-height:560px;display:flex;align-items:center}
+.e404 .num{position:absolute;right:-2%;top:50%;transform:translateY(-50%);font-family:var(--display);font-size:clamp(220px,34vw,520px);line-height:.8;color:var(--vermelho);pointer-events:none}
+.e404 .wrap{position:relative;display:flex;flex-direction:column;gap:20px;padding-top:72px;padding-bottom:72px}
+@media (max-width:640px){.e404 .num{opacity:.35}}
+</style>
+</head>
+<body>
+
+<a href="#conteudo" class="sr">Saltar para o conteúdo</a>
+
+<div class="anuncio"><span>ENVIOS PARA TODO PORTUGAL EM 24–72H</span><span class="extra"><i aria-hidden="true">◆</i><span>PORTES GRÁTIS ACIMA DE [VALOR] €</span><i aria-hidden="true">◆</i><span>PAGA COM MB WAY</span></span></div>
+
+<header class="topo">
+  <div class="wrap">
+    <button class="ib so-mob" aria-label="Abrir menu" data-abre="menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg></button>
+    <a href="#inicio" class="logo" aria-label="Kitanda Market — início"><img src="img/logo.png" alt=""><span>KITANDA MARKET</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#inicio" data-nav="inicio">INÍCIO</a>
+      <div class="loja-dd"><a href="#loja" data-nav="loja">LOJA ▾</a>
+        <div class="dd"><div class="dd-in"><a href="#loja" data-filtro="todas">Todas as camisolas</a><a href="#loja" data-filtro="casa">Seleção Angola · Casa</a><a href="#loja" data-filtro="alternativa">Seleção Angola · Alternativa</a><a href="#loja" data-filtro="kitanda">Coleção Kitanda</a></div></div>
+      </div>
+      <a href="#novidades" data-nav="novidades">NOVIDADES</a>
+      <a href="#sobre" data-nav="sobre">SOBRE</a>
+      <a href="#contacto" data-nav="contacto">CONTACTO</a>
+    </nav>
+    <div class="acoes">
+      <a href="#pesquisa" class="ib" aria-label="Pesquisar"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg></a>
+      <a href="#conta" class="ib so-desk" aria-label="Conta"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></a>
+      <button class="ib" aria-label="Carrinho" data-abre="carrinho"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 7h14l-1.5 12h-11z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><span class="count" id="cnt" hidden>0</span></button>
+    </div>
+  </div>
+</header>
+
+<main id="conteudo">
+
+<!-- ================= INÍCIO ================= -->
+<section class="view" id="v-inicio">
+  <div class="hero">
+    <div class="diag" aria-hidden="true"></div><div class="diag2" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="txt">
+        <span class="ey">Nova coleção Kitanda</span>
+        <h1 class="bb">VESTE A<br>PALANCA</h1>
+        <p class="muted" style="margin:0;font-size:18px;line-height:1.6;max-width:460px">Camisolas com o padrão e as cores de Angola, feitas para o jogo e para a rua. Envio para todo Portugal.</p>
+        <div class="btns" style="display:flex;flex-wrap:wrap;gap:12px"><a href="#loja" class="btn btn-r" style="outline:1px solid var(--branco)">Comprar agora</a><a href="#loja" class="btn btn-o">Ver coleção</a></div>
+      </div>
+      <div class="img"><img src="img/pincelada.jpg" alt="Camisola Kitanda Pincelada"></div>
+    </div>
+  </div>
+  <div class="faixa" aria-hidden="true"></div>
+  <div class="cinza"><div class="wrap confianca" data-tpl="confianca"></div></div>
+
+  <section class="wrap sec" style="display:flex;flex-direction:column;gap:28px">
+    <h2 class="bb t-sec">COMPRAR POR COLEÇÃO</h2>
+    <div class="cols">
+      <a href="#loja" data-filtro="casa" class="col-card"><img src="img/faixa.jpg" alt=""><span class="rot"><span class="bb" style="font-size:34px">CASA</span><span style="color:var(--amarelo);font-weight:700">›</span></span></a>
+      <a href="#loja" data-filtro="alternativa" class="col-card"><img src="img/alternativa.jpg" alt=""><span class="rot" style="border-top-color:var(--amarelo)"><span class="bb" style="font-size:34px">ALTERNATIVA</span><span style="color:var(--amarelo);font-weight:700">›</span></span></a>
+      <a href="#loja" data-filtro="kitanda" class="col-card"><img src="img/pincelada.jpg" alt="" style="object-position:center 16%"><span class="rot" style="border-top-color:var(--branco)"><span class="bb" style="font-size:34px">COLEÇÃO KITANDA</span><span style="color:var(--amarelo);font-weight:700">›</span></span></a>
+    </div>
+  </section>
+
+  <section class="cinza"><div class="wrap sec" style="display:flex;flex-direction:column;gap:28px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px"><h2 class="bb t-sec">MAIS VENDIDOS</h2><a href="#loja" style="font-size:14px;font-weight:600;color:var(--amarelo)">Ver todas ›</a></div>
+    <div class="grelha" data-grelha="todos"></div>
+  </div></section>
+
+  <div class="faixa" aria-hidden="true"></div>
+  <section class="split">
+    <img src="img/faixa.jpg" alt="Detalhe da faixa com o padrão angolano">
+    <div class="txt">
+      <span class="ey">A história</span>
+      <h2 class="bb" style="font-size:clamp(44px,6vw,80px)">O PADRÃO QUE NOS VESTE</h2>
+      <p class="muted" style="margin:0;font-size:17px;line-height:1.7;max-width:520px">[Texto do cliente sobre o significado do padrão, das cores e da ligação a Angola — 2 a 3 frases.]</p>
+      <a href="#sobre" class="btn btn-o" style="align-self:flex-start">Conhecer a marca</a>
+    </div>
+  </section>
+  <div class="faixa" aria-hidden="true"></div>
+
+  <section class="banda" id="espera"><div class="wrap sec" style="padding-top:72px;padding-bottom:72px">
+    <div style="flex:1 1 420px;display:flex;flex-direction:column;gap:10px">
+      <span class="ey">Em breve</span>
+      <h2 class="bb" style="font-size:clamp(46px,6vw,84px)">ALGO NOVO A CHEGAR</h2>
+      <p style="margin:0;font-size:17px">Recebe acesso antecipado ao próximo lançamento.</p>
+    </div>
+    <form class="form-proto" style="flex:1 1 380px;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end">
+      <div class="campo" style="flex:1 1 240px"><label for="esp-email">Email</label><input id="esp-email" class="in in-claro" type="email" placeholder="o-teu@email.pt"></div>
+      <button class="btn btn-k" type="submit">Quero acesso</button>
+    </form>
+  </div></section>
+
+  <section class="wrap sec" style="display:flex;flex-direction:column;gap:24px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:12px"><h2 class="bb" style="font-size:clamp(30px,4vw,52px)">@KITANDA_MARKET</h2><a href="https://www.instagram.com/kitanda_market" style="font-size:14px;font-weight:600;color:var(--amarelo)">Seguir no Instagram ›</a></div>
+    <div class="insta"><img src="img/pincelada.jpg" alt=""><img src="img/alternativa.jpg" alt=""><img src="img/raizes.jpg" alt=""><img src="img/faixa.jpg" alt="" style="object-position:center 50%"><img src="img/logo.png" alt=""><img src="img/pincelada.jpg" alt="" style="object-position:center 60%"></div>
+  </section>
+</section>
+
+<!-- ================= LOJA / COLEÇÃO ================= -->
+<section class="view" id="v-loja">
+  <div class="cab-pag"><div class="diag" aria-hidden="true"></div><div class="wrap">
+    <span class="migalhas" style="padding:0"><a href="#inicio">Início</a> / Loja</span>
+    <h1 class="bb" id="loja-tit">TODAS AS CAMISOLAS</h1>
+    <p class="muted" style="margin:0;font-size:17px;max-width:480px" id="loja-sub">Seleção Angola e Coleção Kitanda, com envio para todo Portugal.</p>
+  </div></div>
+  <div class="wrap barra-f">
+    <div class="chips" role="group" aria-label="Filtrar">
+      <button class="chip sel" data-chip="todas">Todas</button><button class="chip" data-chip="casa">Casa</button><button class="chip" data-chip="alternativa">Alternativa</button><button class="chip" data-chip="kitanda">Coleção Kitanda</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;font-size:14px"><span class="ph" id="loja-n">4 produtos</span><label for="ordenar" class="ph">Ordenar</label><select id="ordenar" class="in" style="min-height:44px"><option>Novidades</option><option>Mais vendidos</option><option>Preço: menor</option><option>Preço: maior</option></select></div>
+  </div>
+  <div class="wrap" style="padding-top:36px;padding-bottom:64px;display:flex;flex-direction:column;gap:40px">
+    <div class="grelha" id="loja-grelha"></div>
+    <button class="btn btn-o" style="align-self:center" data-toast="No protótipo há só 4 camisolas. Na loja, este botão carrega mais produtos.">Carregar mais</button>
+  </div>
+  <div class="wrap" style="padding-bottom:72px"><div style="border-top:1px solid #1F1F1F;padding-top:28px;max-width:760px;display:flex;flex-direction:column;gap:10px">
+    <h2 class="bb" style="font-size:28px">CAMISOLAS DA SELEÇÃO DE ANGOLA EM PORTUGAL</h2>
+    <p class="ph" style="margin:0;font-size:14px;line-height:1.7">[2–3 frases para SEO sobre a coleção: o que é, para quem, envio para todo Portugal.]</p>
+  </div></div>
+</section>
+
+<!-- ================= NOVIDADES ================= -->
+<section class="view" id="v-novidades">
+  <div class="cab-pag"><div class="diag" aria-hidden="true"></div><div class="wrap">
+    <span class="ey">Lançamentos</span>
+    <h1 class="bb">NOVIDADES</h1>
+    <p class="muted" style="margin:0;font-size:17px;max-width:520px">As últimas camisolas a chegar à Kitanda.</p>
+  </div></div>
+  <div class="wrap sec"><div class="grelha" data-grelha="novos"></div></div>
+  <section class="banda"><div class="wrap sec" style="padding-top:64px;padding-bottom:64px">
+    <h2 class="bb" style="font-size:clamp(44px,6vw,80px)">ALGO NOVO A CHEGAR</h2>
+    <a href="#espera" data-ir="inicio" class="btn btn-k">Entrar na lista de espera</a>
+  </div></section>
+</section>
+
+<!-- ================= PRODUTO ================= -->
+<section class="view" id="v-produto">
+  <div class="wrap migalhas"><a href="#loja">Loja</a> / <a href="#loja" id="pdp-col">Seleção Angola</a> / <span style="color:var(--branco)" id="pdp-mig">—</span></div>
+  <div class="wrap pdp">
+    <div class="galeria" id="pdp-gal"></div>
+    <div class="info">
+      <div class="thumbs" id="pdp-thumbs"></div>
+      <h1 class="bb" id="pdp-nome">—</h1>
+      <div style="display:flex;gap:12px;align-items:baseline;flex-wrap:wrap" id="pdp-preco"></div>
+      <span class="ph" style="font-size:13px;margin-top:-6px">IVA incluído · Portes calculados no checkout</span>
+      <span style="font-size:12px;font-weight:700;letter-spacing:.12em;margin-top:8px">VERSÃO: <span class="muted" style="font-weight:500;letter-spacing:0" id="pdp-versao-n"></span></span>
+      <div class="versoes" id="pdp-versoes"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:8px"><span style="font-size:12px;font-weight:700;letter-spacing:.12em">TAMANHO: <span class="muted" style="font-weight:500;letter-spacing:0" id="pdp-tam-n">M</span></span><button style="background:none;border:0;color:var(--amarelo);font-weight:600;font-size:14px;text-decoration:underline;padding:8px 0" data-abre="guia">Guia de tamanhos</button></div>
+      <div class="tams" id="pdp-tams"></div>
+      <button style="background:none;border:0;text-align:left;padding:0;color:var(--cinza-claro);font-size:13px" data-toast="Protótipo: aqui o cliente deixa o email para ser avisado quando o XXL voltar.">XXL esgotado — <u>avisa-me quando voltar</u></button>
+      <button class="btn btn-r btn-full" style="min-height:60px;font-size:15px;margin-top:6px" id="pdp-add">Adicionar ao carrinho</button>
+      <a href="#contacto" class="btn btn-line btn-full" style="min-height:54px;font-size:15px"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="2" aria-hidden="true"><path d="M4 20l1.4-4A8 8 0 1 1 8 18.6z"/></svg>Encomendar por WhatsApp</a>
+      <div class="garantias" data-tpl="garantias"></div>
+      <div class="acc">
+        <details open><summary>Descrição e história do design</summary><p>[Descrição da camisola: inspiração, significado do padrão angolano, para quem é.]</p></details>
+        <details><summary>Tecido, corte e cuidados</summary><p>[Composição do tecido, tipo de corte, instruções de lavagem.]</p></details>
+        <details><summary>Envios</summary><p>Portugal Continental em [24–72h] úteis. Açores e Madeira: [prazo]. <a href="#envios" style="color:var(--amarelo);text-decoration:underline">Ver detalhes</a></p></details>
+        <details><summary>Trocas e devoluções</summary><p>14 dias após a entrega, com a peça sem uso. <a href="#trocas" style="color:var(--amarelo);text-decoration:underline">Ver política</a></p></details>
+      </div>
+    </div>
+  </div>
+  <div class="faixa" aria-hidden="true"></div>
+  <section class="cinza"><div class="wrap porque" style="padding-top:56px;padding-bottom:56px">
+    <div><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="2" aria-hidden="true"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg><div style="display:flex;flex-direction:column;gap:6px"><span class="bb" style="font-size:28px">DESIGN ANGOLANO</span><span class="muted" style="font-size:14px">Padrões e cores com raízes, pensados para a diáspora.</span></div></div>
+    <div><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="2" aria-hidden="true"><path d="M8 3l-5 4 3 4 2-1v11h8V10l2 1 3-4-5-4c-1 2-2 3-4 3S9 5 8 3z"/></svg><div style="display:flex;flex-direction:column;gap:6px"><span class="bb" style="font-size:28px">TECIDO DESPORTIVO</span><span class="muted" style="font-size:14px">[Detalhe do tecido — confirmar com o cliente.]</span></div></div>
+    <div><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="2" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg><div style="display:flex;flex-direction:column;gap:6px"><span class="bb" style="font-size:28px">ENVIO RÁPIDO</span><span class="muted" style="font-size:14px">Entrega em 24–72h para todo Portugal.</span></div></div>
+  </div></section>
+  <section class="wrap sec" style="display:flex;flex-direction:column;gap:28px">
+    <h2 class="bb t-sec">TAMBÉM VAIS GOSTAR</h2>
+    <div class="grelha" id="pdp-rel"></div>
+  </section>
+  <section class="wrap" style="padding-bottom:72px;display:flex;flex-direction:column;gap:10px"><h2 class="bb" style="font-size:36px;border-top:1px solid #1F1F1F;padding-top:28px">AVALIAÇÕES</h2><p class="ph" style="margin:0;font-size:14px">As avaliações aparecem aqui quando houver as primeiras compras.</p></section>
+  <div class="fixa" id="fixa"><img id="fixa-img" src="" alt=""><div style="display:flex;flex-direction:column;flex:0 0 auto"><span class="ph" style="font-size:11px" id="fixa-tam">Tamanho M</span><span class="bb" style="font-size:20px;color:var(--amarelo)">[PREÇO] €</span></div><button class="btn btn-r" style="flex:1;min-height:50px" id="fixa-add">Adicionar</button></div>
+</section>
+
+<!-- ================= CARRINHO ================= -->
+<section class="view" id="v-carrinho">
+  <div class="wrap" style="padding-top:56px;padding-bottom:24px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px">
+    <h1 class="bb" style="font-size:clamp(52px,7vw,88px)">O TEU CARRINHO</h1>
+    <a href="#loja" style="font-size:14px;font-weight:600;color:var(--amarelo)">‹ Continuar a comprar</a>
+  </div>
+  <div class="wrap" style="padding-bottom:96px;display:flex;flex-wrap:wrap;gap:48px;align-items:flex-start">
+    <div style="flex:3 1 520px;min-width:0">
+      <div class="portes" style="border-radius:4px" data-tpl="portes"></div>
+      <div id="cart-linhas"></div>
+    </div>
+    <aside style="flex:2 1 340px;min-width:0;background:var(--grafite);border-radius:4px;padding:32px;display:flex;flex-direction:column;gap:16px;position:sticky;top:100px">
+      <h2 class="bb" style="font-size:36px">RESUMO</h2>
+      <div style="display:flex;justify-content:space-between;font-size:15px"><span class="muted">Subtotal (<span data-n>0</span> artigos)</span><span>[X] €</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:15px"><span class="muted">Envio</span><span class="ph">Calculado no checkout</span></div>
+      <details style="border-top:1px solid var(--linha);border-bottom:1px solid var(--linha);padding:14px 0"><summary style="cursor:pointer;font-size:14px;font-weight:600">Tens um código de desconto?</summary><div style="display:flex;gap:8px;margin-top:12px"><label for="cupao" class="sr">Código</label><input id="cupao" class="in" style="background:var(--preto)"><button class="btn btn-y" style="min-height:52px;padding:0 16px" data-toast="Protótipo: os códigos de desconto funcionam no checkout da Shopify.">Aplicar</button></div></details>
+      <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:700">Total</span><span class="bb" style="font-size:40px">[TOTAL] €</span></div>
+      <button class="btn btn-r btn-full" style="min-height:60px" data-checkout>Finalizar compra</button>
+      <div class="pagamentos" style="justify-content:center" data-tpl="pagamentos"></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= SOBRE ================= -->
+<section class="view" id="v-sobre">
+  <div class="hero" style="min-height:560px">
+    <div class="diag" aria-hidden="true" style="width:48%;clip-path:polygon(26% 0,100% 0,100% 100%,0 100%)"></div>
+    <div class="wrap">
+      <div class="txt"><span class="ey">Sobre a Kitanda</span><h1 class="bb" style="font-size:clamp(56px,9vw,120px)">MAIS DO QUE UMA CAMISOLA</h1><p class="muted" style="margin:0;font-size:18px;line-height:1.7;max-width:500px">[1–2 frases do cliente: quem é a Kitanda, de onde vem o nome e porque nasceu em Portugal.]</p></div>
+      <div class="img"><img src="img/pincelada.jpg" alt="Camisola Kitanda" style="height:560px"></div>
+    </div>
+  </div>
+  <section class="wrap sec" style="display:flex;flex-wrap:wrap;gap:56px">
+    <h2 class="bb" style="flex:1 1 420px;font-size:clamp(44px,5.5vw,72px)">VESTIR ANGOLA, <span style="color:var(--amarelo)">ONDE QUER QUE ESTEJAS.</span></h2>
+    <div class="muted" style="flex:1 1 420px;display:flex;flex-direction:column;gap:18px;font-size:17px;line-height:1.75"><p style="margin:0">[A missão da marca em 2–3 frases.]</p><p style="margin:0">[A história do fundador ou da ideia — curta, pessoal e verdadeira.]</p></div>
+  </section>
+  <section class="cinza"><div class="wrap sec" style="display:flex;flex-direction:column;gap:36px">
+    <h2 class="bb t-sec">AS NOSSAS CORES</h2>
+    <div class="cores">
+      <div><div class="sw" style="background:var(--vermelho)"></div><div class="tx"><span class="bb" style="font-size:32px">VERMELHO</span><span class="muted" style="font-size:15px">A luta e o sangue derramado pela independência.</span></div></div>
+      <div><div class="sw" style="background:#050505;border:1px solid #333"></div><div class="tx"><span class="bb" style="font-size:32px">PRETO</span><span class="muted" style="font-size:15px">O continente africano.</span></div></div>
+      <div><div class="sw" style="background:var(--amarelo)"></div><div class="tx"><span class="bb" style="font-size:32px">AMARELO</span><span class="muted" style="font-size:15px">A riqueza da terra angolana.</span></div></div>
+    </div>
+  </div></section>
+  <div class="faixa" aria-hidden="true"></div>
+  <section class="split" style="flex-direction:row-reverse">
+    <img src="img/alternativa.jpg" alt="Detalhe do padrão na camisola branca" style="object-position:center 38%">
+    <div class="txt"><span class="ey">O padrão</span><h2 class="bb" style="font-size:clamp(44px,5.5vw,72px)">LOSANGOS, CÍRCULOS E HISTÓRIA</h2><p class="muted" style="margin:0;font-size:17px;line-height:1.7;max-width:520px">[O que o padrão representa, de onde vem a inspiração e porque está em todas as peças.]</p></div>
+  </section>
+  <section class="wrap sec porque">
+    <div style="flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="1.8" aria-hidden="true"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg><span class="bb" style="font-size:36px">ORGULHO</span><span class="muted" style="font-size:15px">[Valor 1 em uma frase.]</span></div>
+    <div style="flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="1.8" aria-hidden="true"><path d="M8 3l-5 4 3 4 2-1v11h8V10l2 1 3-4-5-4c-1 2-2 3-4 3S9 5 8 3z"/></svg><span class="bb" style="font-size:36px">QUALIDADE</span><span class="muted" style="font-size:15px">[Valor 2 em uma frase.]</span></div>
+    <div style="flex-direction:column;gap:12px"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="1.8" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.5 3-5.5 6-5.5s6 2 6 5.5M15 15c3 0 6 1.5 6 4.5"/></svg><span class="bb" style="font-size:36px">COMUNIDADE</span><span class="muted" style="font-size:15px">[Valor 3 em uma frase.]</span></div>
+  </section>
+  <section class="banda"><div class="wrap" style="padding-top:64px;padding-bottom:64px"><h2 class="bb" style="font-size:clamp(44px,6vw,72px)">VESTE A TUA HISTÓRIA</h2><a href="#loja" class="btn btn-k">Ver a loja</a></div></section>
+</section>
+
+<!-- ================= CONTACTO ================= -->
+<section class="view" id="v-contacto">
+  <div class="cab-pag"><div class="diag" aria-hidden="true"></div><div class="wrap"><span class="ey">Contacto</span><h1 class="bb">FALA CONNOSCO</h1><p class="muted" style="margin:0;font-size:17px;max-width:520px">Dúvidas sobre tamanhos, encomendas ou trocas? Respondemos em até [24h] úteis.</p></div></div>
+  <div class="wrap sec" style="display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+    <form class="form-proto" style="flex:3 1 460px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
+      <div class="campo"><label for="c-nome">Nome</label><input id="c-nome" class="in"></div>
+      <div class="campo"><label for="c-email">Email</label><input id="c-email" class="in" type="email"></div>
+      <div class="campo"><label for="c-ass">Assunto</label><select id="c-ass" class="in" style="width:100%"><option>Dúvida sobre produto</option><option>A minha encomenda</option><option>Trocas e devoluções</option><option>Outro</option></select></div>
+      <div class="campo"><label for="c-enc">N.º da encomenda <span class="ph" style="font-weight:400">(opcional)</span></label><input id="c-enc" class="in" placeholder="#1001"></div>
+      <div class="campo" style="grid-column:1/-1"><label for="c-msg">Mensagem</label><textarea id="c-msg" class="in"></textarea></div>
+      <div style="grid-column:1/-1;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px"><span class="ph" style="font-size:12px">Ao enviar aceitas a nossa <a href="#privacidade" style="text-decoration:underline">Política de Privacidade</a>.</span><button class="btn btn-r" type="submit">Enviar mensagem</button></div>
+    </form>
+    <aside style="flex:2 1 320px;min-width:0;display:flex;flex-direction:column;gap:16px">
+      <div style="background:var(--amarelo);color:var(--preto);padding:28px;border-radius:4px;display:flex;flex-direction:column;gap:12px"><span class="bb" style="font-size:36px">MAIS RÁPIDO NO WHATSAPP</span><span style="font-size:15px">Resposta normalmente no próprio dia.</span><button class="btn btn-k" style="align-self:flex-start" data-toast="Protótipo: este botão abre a conversa no WhatsApp da Kitanda ([número]).">Abrir WhatsApp</button></div>
+      <div style="background:var(--grafite);padding:28px;border-radius:4px;display:flex;flex-direction:column;gap:18px;font-size:15px">
+        <div><div class="ph" style="font-size:12px;font-weight:700;letter-spacing:.14em">EMAIL</div>[email@kitandamarket.pt]</div>
+        <div><div class="ph" style="font-size:12px;font-weight:700;letter-spacing:.14em">HORÁRIO</div>[Seg–Sex, 10h–19h]</div>
+        <div><div class="ph" style="font-size:12px;font-weight:700;letter-spacing:.14em">REDES</div><a href="https://www.instagram.com/kitanda_market">Instagram</a> · TikTok</div>
+      </div>
+      <a href="#faq" style="padding:20px 28px;border:1px solid #2E2E2E;border-radius:4px;display:flex;justify-content:space-between;font-weight:600">Ver perguntas frequentes<span style="color:var(--amarelo)">›</span></a>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="view" id="v-faq">
+  <div class="cab-pag"><div class="wrap"><span class="ey">Ajuda</span><h1 class="bb">PERGUNTAS FREQUENTES</h1>
+    <div style="max-width:560px"><label for="faq-q" class="sr">Pesquisar na ajuda</label><input id="faq-q" class="in" type="search" placeholder="Pesquisar: tamanhos, MB WAY, trocas…" style="background:var(--preto)"></div></div></div>
+  <div class="wrap sec lado">
+    <nav aria-label="Temas" id="faq-nav"><a href="#faq" data-faq="encomendas" class="sel">Encomendas</a><a href="#faq" data-faq="pagamentos">Pagamentos</a><a href="#faq" data-faq="envios-f">Envios</a><a href="#faq" data-faq="tamanhos">Tamanhos</a><a href="#faq" data-faq="trocas-f">Trocas e devoluções</a></nav>
+    <div class="conteudo faq acc" id="faq-lista">
+      <div class="grupo" id="g-encomendas"><h2>ENCOMENDAS</h2>
+        <details open><summary>Como faço uma encomenda?</summary><p>Escolhe a camisola e o tamanho, adiciona ao carrinho e finaliza a compra. Recebes a confirmação por email.</p></details>
+        <details><summary>Posso alterar ou cancelar a encomenda?</summary><p>[Prazo e forma de alterar ou cancelar — confirmar com o cliente.]</p></details>
+        <details><summary>Posso encomendar pelo WhatsApp?</summary><p>[Sim/não e como funciona.]</p></details></div>
+      <div class="grupo" id="g-pagamentos"><h2>PAGAMENTOS</h2>
+        <details><summary>Que métodos de pagamento aceitam?</summary><p>MB WAY, Referência Multibanco, cartão (Visa, Mastercard), Apple Pay, Google Pay e PayPal.</p></details>
+        <details><summary>Quanto tempo tenho para pagar por Multibanco?</summary><p>[Validade da referência — depende da app de pagamento escolhida.]</p></details></div>
+      <div class="grupo" id="g-envios-f"><h2>ENVIOS</h2>
+        <details><summary>Quanto tempo demora a entrega?</summary><p>Portugal Continental: [24–72h] úteis. Açores e Madeira: [prazo].</p></details>
+        <details><summary>Quanto custa o envio?</summary><p>[Valor] € para o Continental. Grátis em compras acima de [valor] €.</p></details></div>
+      <div class="grupo" id="g-tamanhos"><h2>TAMANHOS</h2>
+        <details><summary>Como sei o meu tamanho?</summary><p>Consulta o <a href="#guia-tamanhos" style="color:var(--amarelo);text-decoration:underline">Guia de tamanhos</a>. Se estiveres entre dois, escolhe o maior.</p></details></div>
+      <div class="grupo" id="g-trocas-f"><h2>TROCAS E DEVOLUÇÕES</h2>
+        <details><summary>Posso trocar ou devolver?</summary><p>Tens 14 dias após a entrega para devolver, com a peça sem uso e com etiquetas. [Quem paga o envio da devolução.]</p></details>
+        <details><summary>Quando recebo o reembolso?</summary><p>[Prazo] após recebermos a peça, pelo mesmo método de pagamento.</p></details></div>
+      <p class="ph" id="faq-zero" hidden>Nenhuma pergunta encontrada. Fala connosco.</p>
+    </div>
+  </div>
+  <section class="banda"><div class="wrap" style="padding-top:56px;padding-bottom:56px"><div><h2 class="bb" style="font-size:clamp(40px,5vw,56px)">NÃO ENCONTRASTE RESPOSTA?</h2><span>Fala connosco — respondemos rápido.</span></div><div style="display:flex;gap:12px;flex-wrap:wrap"><a href="#contacto" class="btn btn-y">WhatsApp</a><a href="#contacto" class="btn btn-k">Contacto</a></div></div></section>
+</section>
+
+<!-- ================= GUIA DE TAMANHOS ================= -->
+<section class="view" id="v-guia-tamanhos">
+  <div class="cab-pag"><div class="wrap"><span class="ey">Ajuda</span><h1 class="bb">GUIA DE TAMANHOS</h1><p class="muted" style="margin:0;font-size:17px;max-width:560px">Medidas da peça em centímetros. Compara com uma camisola tua que te sirva bem.</p></div></div>
+  <div class="wrap sec" style="display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+    <div style="flex:3 1 520px;min-width:0;display:flex;flex-direction:column;gap:20px">
+      <div class="t-box" data-tpl="tabela"></div>
+      <div class="nota"><strong>Corte:</strong> [justo / regular — confirmar]. Entre dois tamanhos? Escolhe o maior para um ajuste mais solto.</div>
+    </div>
+    <aside style="flex:2 1 320px;min-width:0;background:var(--grafite);border-radius:4px;padding:32px;display:flex;flex-direction:column;gap:22px">
+      <h2 class="bb" style="font-size:40px">COMO MEDIR</h2>
+      <div data-tpl="medir"></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ================= POLÍTICAS ================= -->
+<section class="view" id="v-politica">
+  <div class="cab-pag"><div class="wrap"><span class="ey">Informações</span><h1 class="bb" id="pol-tit">ENVIOS E ENTREGAS</h1><span class="ph" style="font-size:13px">Última atualização: [data]</span></div></div>
+  <div class="wrap sec lado">
+    <nav aria-label="Políticas" id="pol-nav"><a href="#envios" data-pol="envios">Envios e entregas</a><a href="#trocas" data-pol="trocas">Trocas e devoluções</a><a href="#termos" data-pol="termos">Termos e condições</a><a href="#privacidade" data-pol="privacidade">Política de privacidade</a></nav>
+    <article class="conteudo doc" id="pol-corpo"></article>
+  </div>
+</section>
+
+<!-- ================= CONTA ================= -->
+<section class="view" id="v-conta">
+  <div class="wrap sec" style="display:flex;flex-direction:column;gap:28px" id="conta-fora">
+    <div style="display:flex;flex-wrap:wrap;gap:24px">
+      <form class="form-login" style="flex:1 1 380px;background:var(--grafite);border-top:4px solid var(--vermelho);padding:36px;display:flex;flex-direction:column;gap:18px;border-radius:4px">
+        <h1 class="bb" style="font-size:56px">ENTRAR</h1>
+        <div class="campo"><label for="l-email">Email</label><input id="l-email" class="in" type="email" style="background:var(--preto)"></div>
+        <div class="campo"><label for="l-pass">Palavra-passe</label><input id="l-pass" class="in" type="password" style="background:var(--preto)"></div>
+        <button type="button" style="background:none;border:0;padding:0;text-align:left;color:var(--cinza-claro);text-decoration:underline;font-size:13px" data-toast="Protótipo: a recuperação de palavra-passe é feita pela Shopify.">Esqueceste-te da palavra-passe?</button>
+        <button class="btn btn-r" type="submit">Entrar</button>
+        <span class="ph" style="font-size:12px">Protótipo: qualquer email entra na conta de exemplo.</span>
+      </form>
+      <div style="flex:1 1 380px;background:var(--grafite);border-top:4px solid var(--amarelo);padding:36px;display:flex;flex-direction:column;gap:18px;border-radius:4px">
+        <h2 class="bb" style="font-size:56px">NOVO POR AQUI?</h2>
+        <ul class="muted" style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;font-size:15px"><li>✓ Segue as tuas encomendas</li><li>✓ Guarda moradas para comprar mais rápido</li><li>✓ Acesso antecipado a lançamentos</li></ul>
+        <button class="btn btn-o" style="margin-top:auto" data-toast="Protótipo: a criação de conta é feita pela Shopify.">Criar conta</button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap sec" style="display:none;flex-direction:column;gap:28px" id="conta-dentro">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px"><h1 class="bb" style="font-size:clamp(52px,7vw,72px)">OLÁ, [NOME]</h1><button style="background:none;border:0;color:var(--cinza);text-decoration:underline;font-size:14px" id="sair">Terminar sessão</button></div>
+    <div class="lado">
+      <nav aria-label="Conta"><a href="#conta" class="sel">Encomendas</a><a href="#conta" data-toast="Protótipo: gestão de moradas da Shopify.">Moradas</a><a href="#conta" data-toast="Protótipo: dados pessoais da Shopify.">Dados pessoais</a></nav>
+      <div class="conteudo t-box"><table class="t" style="min-width:560px"><thead><tr><th>ENCOMENDA</th><th>DATA</th><th>ESTADO</th><th>TOTAL</th><th></th></tr></thead><tbody>
+        <tr><td style="font-weight:600">#1002</td><td>[data]</td><td><span class="b-y" style="font-size:11px;font-weight:700;padding:4px 8px">ENVIADA</span></td><td>[X] €</td><td><a href="#conta" style="color:var(--amarelo);font-weight:600;font-size:13px">Seguir ›</a></td></tr>
+        <tr><td style="font-weight:600">#1001</td><td>[data]</td><td><span style="border:1px solid var(--linha2);font-size:11px;font-weight:700;padding:3px 8px">ENTREGUE</span></td><td>[X] €</td><td><a href="#conta" style="font-weight:600;font-size:13px">Ver ›</a></td></tr>
+      </tbody></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PESQUISA ================= -->
+<section class="view" id="v-pesquisa">
+  <div class="cinza"><div class="wrap" style="padding-top:48px;padding-bottom:36px;display:flex;flex-direction:column;gap:16px">
+    <label for="pq" class="bb" style="font-size:clamp(44px,6vw,64px)">PESQUISAR</label>
+    <div style="display:flex;gap:8px;max-width:760px"><input id="pq" class="in" type="search" placeholder="Ex.: angola, alternativa, kitanda" style="background:var(--preto);border:2px solid var(--amarelo);min-height:58px;font-size:17px"></div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px" class="ph">Populares: <button class="chip" data-q="alternativa">Alternativa</button><button class="chip" data-q="angola">Angola</button><button class="chip" data-q="kitanda">Kitanda</button></div>
+  </div></div>
+  <div class="wrap sec" style="padding-top:36px;display:flex;flex-direction:column;gap:24px">
+    <span class="muted" id="pq-n"></span>
+    <div class="grelha" id="pq-grelha"></div>
+    <div class="nota" id="pq-zero" hidden><strong>Não encontrámos nada.</strong> Experimenta “alternativa” ou <a href="#loja" style="color:var(--amarelo);text-decoration:underline">vê todas as camisolas</a>.</div>
+  </div>
+</section>
+
+<!-- ================= 404 ================= -->
+<section class="view" id="v-nao-encontrado">
+  <div class="e404"><span class="num" aria-hidden="true">404</span><div style="position:absolute;right:0;top:0;bottom:0;width:6px;background:var(--amarelo)"></div>
+    <div class="wrap"><span class="ey">Erro 404</span><h1 class="bb" style="font-size:clamp(72px,10vw,132px);max-width:640px">FORA DE JOGO!</h1><p class="muted" style="margin:0;font-size:18px;max-width:460px">Esta página não existe ou mudou de lugar. Volta ao campo:</p><div style="display:flex;flex-wrap:wrap;gap:12px"><a href="#loja" class="btn btn-r">Ir para a loja</a><a href="#inicio" class="btn btn-o">Página inicial</a></div></div></div>
+  <section class="cinza"><div class="wrap sec" style="display:flex;flex-direction:column;gap:28px"><h2 class="bb" style="font-size:clamp(36px,4vw,48px)">TALVEZ PROCURASSES ISTO</h2><div class="grelha" data-grelha="todos"></div></div></section>
+</section>
+
+</main>
+
+<!-- ================= RODAPÉ ================= -->
+<footer class="rodape">
+  <div class="faixa" aria-hidden="true"></div>
+  <span class="marca" aria-hidden="true">K</span>
+  <div class="wrap" style="position:relative;padding-top:64px;padding-bottom:32px;display:flex;flex-direction:column;gap:44px">
+    <div class="cols-r">
+      <div style="flex:2 1 320px;display:flex;flex-direction:column;gap:16px">
+        <h2 class="bb" style="font-size:40px">-10% NA PRIMEIRA COMPRA</h2>
+        <form class="form-proto" style="display:flex;gap:8px;max-width:460px"><label for="ft-news" class="sr">Email</label><input id="ft-news" type="email" class="in" placeholder="O teu email" style="background:var(--preto);border-color:var(--linha2)"><button class="btn btn-y" style="padding:0 20px">Subscrever</button></form>
+      </div>
+      <div class="f-desk">
+        <nav aria-label="Loja"><span class="tit">LOJA</span><a href="#loja" data-filtro="todas">Todas as camisolas</a><a href="#loja" data-filtro="casa">Seleção Angola</a><a href="#loja" data-filtro="kitanda">Coleção Kitanda</a><a href="#novidades">Novidades</a></nav>
+        <nav aria-label="Ajuda"><span class="tit">AJUDA</span><a href="#faq">FAQ</a><a href="#guia-tamanhos">Guia de tamanhos</a><a href="#envios">Envios e entregas</a><a href="#trocas">Trocas e devoluções</a></nav>
+        <nav aria-label="Kitanda"><span class="tit">KITANDA</span><a href="#sobre">Sobre</a><a href="#contacto">Contacto</a><a href="#conta">A minha conta</a><a href="https://www.instagram.com/kitanda_market">Instagram</a></nav>
+      </div>
+      <div class="f-mob">
+        <details><summary>Loja</summary><div><a href="#loja" data-filtro="todas">Todas as camisolas</a><a href="#loja" data-filtro="casa">Seleção Angola</a><a href="#loja" data-filtro="kitanda">Coleção Kitanda</a><a href="#novidades">Novidades</a></div></details>
+        <details><summary>Ajuda</summary><div><a href="#faq">FAQ</a><a href="#guia-tamanhos">Guia de tamanhos</a><a href="#envios">Envios e entregas</a><a href="#trocas">Trocas e devoluções</a></div></details>
+        <details><summary>Kitanda</summary><div><a href="#sobre">Sobre</a><a href="#contacto">Contacto</a><a href="#conta">A minha conta</a><a href="https://www.instagram.com/kitanda_market">Instagram</a></div></details>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;padding-top:24px;border-top:1px solid #1F1F1F">
+      <div class="pagamentos" data-tpl="pagamentos"></div>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;font-size:12px" class="ph"><a href="https://www.livroreclamacoes.pt" class="livro" style="color:var(--branco)">Livro de Reclamações</a><span>© 2026 Kitanda Market · NIF [NIF] · <a href="#termos">Termos</a> · <a href="#privacidade">Privacidade</a> · RAL</span></div>
+    </div>
+  </div>
+</footer>
+
+<!-- flutuantes -->
+<a href="#contacto" class="wa" aria-label="Falar no WhatsApp"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20l1.4-4A8 8 0 1 1 8 18.6z"/></svg></a>
+<div class="proto" id="proto">PROTÓTIPO · textos e preços editáveis na Shopify <button aria-label="Esconder aviso" id="proto-x">×</button></div>
+<div class="overlay" id="overlay"></div>
+
+<div class="menu-mob" id="menu" aria-hidden="true">
+  <div class="cab"><button class="ib" aria-label="Fechar menu" data-fecha><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><img src="img/logo.png" alt="Kitanda Market" style="width:40px;height:40px;border-radius:4px"><span style="width:44px"></span></div>
+  <form style="padding:16px 16px 4px" id="menu-pq"><label for="m-pq" class="sr">Pesquisar</label><input id="m-pq" class="in" type="search" placeholder="Pesquisar camisolas…"></form>
+  <nav aria-label="Menu">
+    <a href="#inicio" class="mi">INÍCIO</a>
+    <details open><summary class="mi">LOJA</summary><div class="subs"><a href="#loja" data-filtro="todas">Todas as camisolas</a><a href="#loja" data-filtro="casa">Seleção Angola · Casa</a><a href="#loja" data-filtro="alternativa">Seleção Angola · Alternativa</a><a href="#loja" data-filtro="kitanda">Coleção Kitanda</a></div></details>
+    <a href="#novidades" class="mi">NOVIDADES</a><a href="#sobre" class="mi">SOBRE</a><a href="#contacto" class="mi">CONTACTO</a>
+  </nav>
+  <div class="pe"><a href="#conta">Entrar / A minha conta</a><a href="#contacto">Falar no WhatsApp</a><a href="#faq" class="ph" style="font-weight:500">Ajuda e perguntas frequentes</a></div>
+  <div class="bandeira" aria-hidden="true"></div>
+</div>
+
+<aside class="gaveta" id="carrinho" aria-label="Carrinho" aria-hidden="true">
+  <div class="cab"><h2 class="bb" style="font-size:32px">O TEU CARRINHO <span style="color:var(--amarelo)">(<span data-n>0</span>)</span></h2><button class="ib" aria-label="Fechar carrinho" data-fecha><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="portes" data-tpl="portes"></div>
+  <div class="corpo" id="gav-linhas"></div>
+  <div class="pe" id="gav-pe">
+    <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:600">Subtotal</span><span class="bb" style="font-size:30px">[TOTAL] €</span></div>
+    <span class="ph" style="font-size:12px">IVA incluído. Portes calculados no checkout.</span>
+    <button class="btn btn-r btn-full" data-checkout>Finalizar compra</button>
+    <a href="#carrinho" style="text-align:center;font-size:13px;text-decoration:underline" class="muted">Ver carrinho completo</a>
+  </div>
+</aside>
+
+<div class="painel" id="guia" role="dialog" aria-modal="true" aria-labelledby="guia-t" aria-hidden="true">
+  <div class="cab"><h2 class="bb" style="font-size:34px" id="guia-t">GUIA DE TAMANHOS</h2><button class="ib" aria-label="Fechar" data-fecha><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="corpo">
+    <div class="t-box" data-tpl="tabela"></div>
+    <div class="nota"><strong>Corte:</strong> [justo / regular — confirmar]. Entre dois tamanhos? Escolhe o maior.</div>
+    <a href="#guia-tamanhos" class="muted" style="font-size:13px;text-decoration:underline">Como medir — ver guia completo</a>
+    <button class="btn btn-r" data-fecha>Fechar</button>
+  </div>
+</div>
+
+<div class="painel" id="checkout" role="dialog" aria-modal="true" aria-labelledby="chk-t" aria-hidden="true">
+  <div class="cab"><h2 class="bb" style="font-size:34px" id="chk-t">CHECKOUT DA SHOPIFY</h2><button class="ib" aria-label="Fechar" data-fecha><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="corpo"><p class="muted" style="margin:0;font-size:15px;line-height:1.7">Este é um protótipo de design. Na loja real, este botão leva ao checkout seguro da Shopify, com MB WAY, Multibanco, cartão, Apple Pay, Google Pay e PayPal.</p><div class="pagamentos" data-tpl="pagamentos"></div><button class="btn btn-r" data-fecha>Entendido</button></div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+const P=[
+ {id:'faixa',nome:'Angola Faixa Tradicional — Vermelha',curto:'Angola Faixa Tradicional',img:'img/faixa.jpg',col:'casa',colNome:'Seleção Angola',badge:['NOVO','b-y'],novo:true},
+ {id:'alternativa',nome:'Angola Alternativa — Branca',curto:'Angola Alternativa',img:'img/alternativa.jpg',col:'alternativa',colNome:'Seleção Angola',badge:['-20%','b-r'],promo:true},
+ {id:'raizes',nome:'Angola Raízes — Vermelha',curto:'Angola Raízes',img:'img/raizes.jpg',col:'casa',colNome:'Seleção Angola'},
+ {id:'pincelada',nome:'Kitanda Pincelada',curto:'Kitanda Pincelada',img:'img/pincelada.jpg',col:'kitanda',colNome:'Coleção Kitanda',novo:true}
+];
+const TAM=['S','M','L','XL','XXL'];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const st={prod:'alternativa',tam:'M',filtro:'todas',cart:[],logado:false};
+const precoHTML=p=>p.promo?'<span class="preco"><span class="promo">[PREÇO] €</span><s>[PREÇO] €</s></span>':'<span class="preco">[PREÇO] €</span>';
+
+/* modelos repetidos */
+const ic={
+ envio:'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="2" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
+ troca:'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="2" aria-hidden="true"><path d="M4 12a8 8 0 1 0 3-6.2"/><path d="M4 4v4h4"/></svg>',
+ cad:'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="2" aria-hidden="true"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>',
+ wa:'<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFCB00" stroke-width="2" aria-hidden="true"><path d="M4 20l1.4-4A8 8 0 1 1 8 18.6z"/></svg>'
+};
+const tpl={
+ confianca:`<div>${ic.envio}Envio em 24–72h para todo Portugal</div><div>${ic.troca}Trocas e devoluções em 14 dias</div><div>${ic.cad}MB WAY, Multibanco e cartão</div><div>${ic.wa}Apoio por WhatsApp</div>`,
+ garantias:`<div>${ic.envio}<span>Chega entre <strong>[data]</strong> e <strong>[data]</strong></span></div><div>${ic.troca}Trocas e devoluções em 14 dias</div><div>${ic.cad}MB WAY · Multibanco · Cartão · PayPal</div>`,
+ pagamentos:['MB WAY','Multibanco','Visa','Mastercard','PayPal','Apple Pay'].map(x=>`<span>${x}</span>`).join(''),
+ tabela:`<table class="t" style="min-width:420px"><thead><tr><th>TAMANHO</th><th>A · PEITO (CM)</th><th>B · COMPRIMENTO (CM)</th><th>ALTURA</th></tr></thead><tbody>${TAM.map(t=>`<tr><td class="bb" style="font-size:22px">${t}</td><td>[ ]</td><td>[ ]</td><td>[ ]</td></tr>`).join('')}</tbody></table>`,
+ medir:`<svg viewBox="0 0 220 220" width="100%" style="max-width:240px;display:block;margin:0 auto 20px" role="img" aria-label="Esquema de camisola com as medidas A (peito) e B (comprimento)"><path d="M70 20 L40 32 L12 70 L42 88 L56 74 L56 205 L164 205 L164 74 L178 88 L208 70 L180 32 L150 20 Q110 44 70 20 Z" fill="none" stroke="#F5F5F0" stroke-width="2.5" stroke-linejoin="round"/><line x1="56" y1="96" x2="164" y2="96" stroke="#FFCB00" stroke-width="2.5"/><path d="M56 96l7-5v10z M164 96l-7-5v10z" fill="#FFCB00"/><text x="110" y="88" fill="#FFCB00" font-family="Inter" font-size="14" font-weight="700" text-anchor="middle">A</text><line x1="190" y1="24" x2="190" y2="205" stroke="#CC092F" stroke-width="2.5"/><path d="M190 24l-5 7h10z M190 205l-5-7h10z" fill="#CC092F"/><text x="202" y="120" fill="#CC092F" font-family="Inter" font-size="14" font-weight="700">B</text></svg><p class="muted" style="margin:0 0 12px;font-size:15px"><strong style="color:var(--amarelo)">A · Peito:</strong> de axila a axila, com a camisola estendida.</p><p class="muted" style="margin:0;font-size:15px"><strong style="color:var(--vermelho)">B · Comprimento:</strong> do ponto mais alto do ombro até à bainha.</p>`
+};
+function preencheTpl(){ $$('[data-tpl]').forEach(el=>{ if(el.dataset.tpl!=='portes') el.innerHTML=tpl[el.dataset.tpl]; }); }
+
+/* cartões */
+function card(p){
+ return `<article class="card"><a href="#produto" data-prod="${p.id}" class="foto">${p.badge?`<span class="badge ${p.badge[1]}">${p.badge[0]}</span>`:''}<img src="${p.img}" alt="${p.nome}" loading="lazy"></a><h3><a href="#produto" data-prod="${p.id}">${p.nome}</a></h3>${precoHTML(p)}<button class="btn btn-line" data-quick="${p.id}">+ Adicionar rapidamente</button></article>`;
+}
+function grelhas(){
+ $$('[data-grelha]').forEach(g=>{ const l=g.dataset.grelha==='novos'?P.filter(p=>p.novo):P; g.innerHTML=l.map(card).join(''); });
+}
+const titulos={todas:['TODAS AS CAMISOLAS','Seleção Angola e Coleção Kitanda, com envio para todo Portugal.'],casa:['SELEÇÃO ANGOLA · CASA','Camisolas vermelhas com o padrão e as cores da bandeira.'],alternativa:['SELEÇÃO ANGOLA · ALTERNATIVA','A versão branca, com a faixa vermelha e o padrão angolano.'],kitanda:['COLEÇÃO KITANDA','Designs próprios da Kitanda, com energia de rua.']};
+function loja(){
+ const l=st.filtro==='todas'?P:P.filter(p=>p.col===st.filtro);
+ $('#loja-grelha').innerHTML=l.map(card).join('');
+ $('#loja-n').textContent=l.length+(l.length===1?' produto':' produtos');
+ $('#loja-tit').textContent=titulos[st.filtro][0]; $('#loja-sub').textContent=titulos[st.filtro][1];
+ $$('[data-chip]').forEach(c=>c.classList.toggle('sel',c.dataset.chip===st.filtro));
+}
+
+/* produto */
+function produto(){
+ const p=P.find(x=>x.id===st.prod);
+ $('#pdp-nome').textContent=p.nome.toUpperCase(); $('#pdp-mig').textContent=p.nome; $('#pdp-col').textContent=p.colNome;
+ $('#pdp-preco').innerHTML=(p.promo?'<span class="bb" style="font-size:44px;color:var(--amarelo)">[PREÇO] €</span><s class="bb" style="font-size:28px;color:var(--cinza)">[PREÇO] €</s><span class="b-r" style="font-size:12px;font-weight:700;padding:4px 8px">-20%</span>':'<span class="bb" style="font-size:44px">[PREÇO] €</span>');
+ $('#pdp-gal').innerHTML=`<div class="g g1">${p.badge?`<span class="badge ${p.badge[1]}">${p.badge[0]}</span>`:''}<img src="${p.img}" alt="${p.nome}, frente" style="object-position:center 16%"></div><div class="g g2"><img src="${p.img}" alt="Detalhe do emblema" style="object-position:80% 42%;transform:scale(1.6)"></div><div class="g g3"><img src="${p.img}" alt="Detalhe do padrão" style="object-position:22% 40%;transform:scale(1.6)"></div><div class="g g4"><div class="vazio-f">[Foto das costas]</div></div><div class="g g5"><div class="vazio-f">[Foto lifestyle]</div></div>`;
+ $('#pdp-thumbs').innerHTML=`<button class="sel" aria-label="Frente"><img src="${p.img}" alt="" style="object-position:center 20%"></button><button aria-label="Emblema"><img src="${p.img}" alt="" style="object-position:80% 42%;transform:scale(1.6)"></button><button aria-label="Padrão"><img src="${p.img}" alt="" style="object-position:22% 40%;transform:scale(1.6)"></button><button>Costas</button><button>Lifestyle</button>`;
+ $('#pdp-thumbs').onclick=e=>{const b=e.target.closest('button'); if(!b)return; $$('#pdp-thumbs button').forEach(x=>x.classList.toggle('sel',x===b)); const im=b.querySelector('img'); const main=$('#pdp-gal .g1 img'); if(im){main.src=im.src;main.style.objectPosition=im.style.objectPosition;main.style.transform=im.style.transform;} else toast('Protótipo: aqui entra a foto "'+b.textContent+'" do cliente.');};
+ const vers=P.filter(x=>x.col!=='kitanda'||x.id===p.id);
+ $('#pdp-versoes').innerHTML=vers.map(v=>`<button class="${v.id===p.id?'sel':''}" data-ver="${v.id}" aria-label="${v.nome}"><img src="${v.img}" alt=""></button>`).join('');
+ $('#pdp-versao-n').textContent=p.nome.split('—').pop().trim();
+ $('#pdp-tams').innerHTML=TAM.map(t=>`<button data-tam="${t}" class="${t===st.tam?'sel':''}" ${t==='XXL'?'disabled aria-label="XXL esgotado"':''}>${t}</button>`).join('');
+ $('#pdp-tam-n').textContent=st.tam; $('#fixa-tam').textContent='Tamanho '+st.tam; $('#fixa-img').src=p.img;
+ $('#pdp-rel').innerHTML=P.filter(x=>x.id!==p.id).map(card).join('');
+}
+
+/* carrinho */
+function addCart(id,tam){
+ const l=st.cart.find(x=>x.id===id&&x.tam===tam); if(l) l.q++; else st.cart.push({id,tam,q:1});
+ renderCart(); abre('carrinho');
+}
+function linhaHTML(l,i){
+ const p=P.find(x=>x.id===l.id);
+ return `<div class="linha-c"><img src="${p.img}" alt=""><div class="info"><a href="#produto" data-prod="${p.id}" style="font-weight:600;font-size:15px">${p.nome}</a><span class="ph" style="font-size:13px">Tamanho ${l.tam}</span><div style="display:flex;justify-content:space-between;align-items:center;margin-top:auto;gap:10px;flex-wrap:wrap"><div class="qtd"><button aria-label="Diminuir" data-q="${i}" data-d="-1">−</button><span>${l.q}</span><button aria-label="Aumentar" data-q="${i}" data-d="1">+</button></div><span class="preco" style="font-size:22px">[PREÇO] €</span></div><button style="align-self:flex-start;background:none;border:0;padding:0;color:var(--cinza);text-decoration:underline;font-size:12px" data-rm="${i}">Remover</button></div></div>`;
+}
+function renderCart(){
+ const n=st.cart.reduce((a,l)=>a+l.q,0);
+ $$('[data-n]').forEach(e=>e.textContent=n);
+ const c=$('#cnt'); c.textContent=n; c.hidden=!n;
+ const vazio=`<div class="vazio"><span class="bb" style="font-size:32px">O CARRINHO ESTÁ VAZIO</span><a href="#loja" class="btn btn-r">Ver camisolas</a></div>`;
+ const html=n?st.cart.map(linhaHTML).join(''):vazio;
+ $('#gav-linhas').innerHTML=html; $('#cart-linhas').innerHTML=html; $('#gav-pe').style.display=n?'flex':'none';
+ const pct=Math.min(100,n*34), falta=pct>=100;
+ $$('[data-tpl="portes"]').forEach(el=>el.innerHTML=`<span>${falta?'<strong style="color:var(--amarelo)">Tens portes grátis!</strong>':'Faltam <strong style="color:var(--amarelo)">[X] €</strong> para portes grátis'}</span><div class="barra"><div style="width:${pct}%"></div></div>`);
+}
+
+/* overlays */
+let aberto=null;
+function abre(id){ fecha(); aberto=$('#'+id); aberto.classList.add('on'); aberto.setAttribute('aria-hidden','false'); $('#overlay').classList.add('on'); document.body.style.overflow='hidden'; const f=aberto.querySelector('button,a,input'); if(f) setTimeout(()=>f.focus(),50); }
+function fecha(){ if(!aberto)return; aberto.classList.remove('on'); aberto.setAttribute('aria-hidden','true'); aberto=null; $('#overlay').classList.remove('on'); document.body.style.overflow=''; }
+let tt; function toast(m){ const t=$('#toast'); t.textContent=m; t.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('on'),3800); }
+
+/* políticas */
+const POL={
+ envios:['ENVIOS E ENTREGAS',`<p style="font-size:18px;color:var(--branco)">Enviamos para todo Portugal. As encomendas saem em [1–2] dias úteis após a confirmação do pagamento.</p><h2>PRAZOS E CUSTOS</h2><div class="t-box" style="margin-bottom:14px"><table class="t" style="min-width:460px"><thead><tr><th>ZONA</th><th>PRAZO</th><th>CUSTO</th></tr></thead><tbody><tr><td>Portugal Continental</td><td>[24–72h úteis]</td><td>[X] € · grátis acima de [X] €</td></tr><tr><td>Açores e Madeira</td><td>[prazo]</td><td>[X] €</td></tr><tr><td>Resto da Europa</td><td colspan="2" class="ph">Em breve</td></tr></tbody></table></div><h2>TRANSPORTADORA E SEGUIMENTO</h2><p>Enviamos por [CTT / CTT Expresso]. Quando a encomenda sai, recebes por email o código para a seguires.</p><h2>MORADA E RECEÇÃO</h2><p>[O que acontece se ninguém estiver em casa, prazo de levantamento, morada errada.]</p><h2>ENCOMENDAS DANIFICADAS</h2><p>[Como reportar — fotos, prazo e contacto.]</p>`],
+ trocas:['TROCAS E DEVOLUÇÕES',`<p style="font-size:18px;color:var(--branco)">Tens 14 dias após a entrega para devolver ou trocar, sem precisares de justificar.</p><h2>CONDIÇÕES</h2><p>A peça deve estar sem uso, com etiquetas e na embalagem original. [Exceções, se existirem.]</p><h2>COMO FAZER</h2><p>1. Fala connosco pelo formulário ou WhatsApp com o n.º da encomenda.<br>2. [Instruções de envio da devolução.]<br>3. Recebes o reembolso em [prazo] pelo mesmo método de pagamento.</p><h2>CUSTOS</h2><p>[Quem paga o envio da devolução.]</p>`],
+ termos:['TERMOS E CONDIÇÕES',`<p style="font-size:18px;color:var(--branco)">[Texto legal a fornecer pelo cliente ou pelo seu contabilista/jurista.]</p><h2>IDENTIFICAÇÃO DA EMPRESA</h2><p>[Nome, NIF, morada, contacto.]</p><h2>PREÇOS E PAGAMENTO</h2><p>Todos os preços incluem IVA à taxa em vigor.</p><h2>RESOLUÇÃO ALTERNATIVA DE LITÍGIOS</h2><p>[Entidade RAL competente e respetivo site.]</p>`],
+ privacidade:['POLÍTICA DE PRIVACIDADE',`<p style="font-size:18px;color:var(--branco)">[Texto RGPD a fornecer pelo cliente — que dados recolhemos, para quê e durante quanto tempo.]</p><h2>COOKIES</h2><p>[Uso de cookies e gestão de preferências — banner nativo da Shopify.]</p><h2>OS TEUS DIREITOS</h2><p>[Acesso, retificação, apagamento — e como pedir.]</p>`]
+};
+
+/* router */
+const VIEWS=['inicio','loja','novidades','produto','carrinho','sobre','contacto','faq','guia-tamanhos','conta','pesquisa','nao-encontrado'];
+const POLS=Object.keys(POL);
+function rota(){
+ fecha();
+ let h=(location.hash||'#inicio').slice(1)||'inicio';
+ if(h==='espera'){ h='inicio'; }
+ let view=h;
+ if(POLS.includes(h)){ view='politica'; const [t,c]=POL[h]; $('#pol-tit').textContent=t; $('#pol-corpo').innerHTML=c+`<div class="nota" style="margin-top:36px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;border-left-color:var(--vermelho)"><span style="color:var(--branco)">Tens outra dúvida?</span><a href="#contacto" class="btn btn-r" style="min-height:46px">Falar connosco</a></div>`; $$('#pol-nav a').forEach(a=>a.classList.toggle('sel',a.dataset.pol===h)); }
+ else if(!VIEWS.includes(h)) view='nao-encontrado';
+ $$('.view').forEach(v=>v.classList.toggle('on',v.id==='v-'+view));
+ $$('.nav [data-nav]').forEach(a=>a.classList.toggle('ativo',a.dataset.nav===view||(view==='produto'&&a.dataset.nav==='loja')));
+ document.body.classList.toggle('pdp-on',view==='produto');
+ if(view==='loja') loja();
+ if(view==='produto') produto();
+ if(view==='pesquisa') pesquisa();
+ if(view==='conta'){ $('#conta-fora').style.display=st.logado?'none':'flex'; $('#conta-dentro').style.display=st.logado?'flex':'none'; }
+ document.title=(view==='inicio'?'':($('#v-'+view+' h1')?.textContent.trim().toLowerCase().replace(/^./,c=>c.toUpperCase())+' · '))+'Kitanda Market — Protótipo';
+ if(location.hash==='#espera') setTimeout(()=>$('#espera').scrollIntoView(),30); else window.scrollTo(0,0);
+}
+
+/* pesquisa */
+function pesquisa(){
+ const q=$('#pq').value.trim().toLowerCase();
+ const l=q?P.filter(p=>(p.nome+' '+p.colNome+' '+p.col).toLowerCase().includes(q)):[];
+ $('#pq-grelha').innerHTML=l.map(card).join('');
+ $('#pq-n').innerHTML=q?`<strong style="color:var(--branco)">${l.length} resultado${l.length===1?'':'s'}</strong> para “${q.replace(/[<>&"]/g,'')}”`:'Escreve o que procuras.';
+ $('#pq-zero').hidden=!(q&&!l.length);
+}
+$('#pq').addEventListener('input',pesquisa);
+$('#menu-pq').addEventListener('submit',e=>{e.preventDefault(); $('#pq').value=$('#m-pq').value; location.hash='pesquisa'; pesquisa();});
+
+/* faq */
+$('#faq-q').addEventListener('input',e=>{ const q=e.target.value.trim().toLowerCase(); let n=0; $$('#faq-lista details').forEach(d=>{const ok=!q||d.textContent.toLowerCase().includes(q); d.style.display=ok?'':'none'; if(ok)n++; if(q&&ok)d.open=true;}); $$('#faq-lista .grupo').forEach(g=>g.style.display=[...g.querySelectorAll('details')].some(d=>d.style.display!=='none')?'':'none'); $('#faq-zero').hidden=n>0; });
+$('#faq-nav').addEventListener('click',e=>{const a=e.target.closest('a'); if(!a)return; e.preventDefault(); $$('#faq-nav a').forEach(x=>x.classList.toggle('sel',x===a)); $('#g-'+a.dataset.faq).scrollIntoView({behavior:'smooth',block:'start'});});
+
+/* cliques globais */
+document.addEventListener('click',e=>{
+ const t=e.target;
+ const pr=t.closest('[data-prod]'); if(pr){ st.prod=pr.dataset.prod; st.tam='M'; if(location.hash==='#produto'){ e.preventDefault(); produto(); window.scrollTo(0,0);} }
+ const fl=t.closest('[data-filtro]'); if(fl){ st.filtro=fl.dataset.filtro; if(location.hash==='#loja'){ e.preventDefault(); fecha(); loja(); window.scrollTo(0,0);} }
+ const ch=t.closest('[data-chip]'); if(ch){ st.filtro=ch.dataset.chip; loja(); }
+ const qk=t.closest('[data-quick]'); if(qk){ addCart(qk.dataset.quick,'M'); toast('Adicionado ao carrinho (tamanho M).'); }
+ const ver=t.closest('[data-ver]'); if(ver){ st.prod=ver.dataset.ver; produto(); }
+ const tm=t.closest('[data-tam]'); if(tm&&!tm.disabled){ st.tam=tm.dataset.tam; produto(); }
+ if(t.closest('#pdp-add')||t.closest('#fixa-add')) addCart(st.prod,st.tam);
+ const q=t.closest('[data-q][data-d]'); if(q){ const l=st.cart[+q.dataset.q]; l.q+= +q.dataset.d; if(l.q<1) st.cart.splice(+q.dataset.q,1); renderCart(); }
+ const rm=t.closest('[data-rm]'); if(rm){ st.cart.splice(+rm.dataset.rm,1); renderCart(); }
+ const ab=t.closest('[data-abre]'); if(ab) abre(ab.dataset.abre);
+ if(t.closest('[data-fecha]')||t===$('#overlay')) fecha();
+ if(t.closest('[data-checkout]')){ abre('checkout'); }
+ const ts=t.closest('[data-toast]'); if(ts){ e.preventDefault(); toast(ts.dataset.toast); }
+ const sq=t.closest('[data-q]:not([data-d])'); if(sq){ $('#pq').value=sq.dataset.q; pesquisa(); }
+ if(t.closest('[data-ir]')){ /* link para #espera */ }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') fecha(); });
+$$('.form-proto').forEach(f=>f.addEventListener('submit',e=>{ e.preventDefault(); toast('Protótipo: este formulário não envia dados. Na loja, liga ao email/Shopify.'); }));
+$('.form-login').addEventListener('submit',e=>{ e.preventDefault(); st.logado=true; rota(); });
+$('#sair').addEventListener('click',()=>{ st.logado=false; rota(); });
+$('#proto-x').addEventListener('click',()=>$('#proto').remove());
+
+/* barra fixa do produto (telemóvel) */
+const io=new IntersectionObserver(es=>es.forEach(en=>$('#fixa').classList.toggle('on',!en.isIntersecting&&location.hash==='#produto')),{threshold:0});
+io.observe($('#pdp-add'));
+
+window.addEventListener('hashchange',rota);
+preencheTpl(); grelhas(); renderCart(); rota();
+})();
+</script>
+</body>
+</html>
